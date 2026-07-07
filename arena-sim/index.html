@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IE Digital Twin Tycoon & SCADA Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Main Header -->
+  <header class="main-header">
+    <div class="header-title">
+      <h1>🏭 IE DIGITAL TWIN TYCOON & ARENA SIMULATOR</h1>
+      <p>ระบบจำลองแฝดดิจิทัล, ควบคุมการซ่อมบำรุงเชิงทำนาย (PINN) และแล็บออกแบบการทดลองเครื่องจักร (DOE)</p>
+    </div>
+    
+    <div class="time-hud">
+      <div class="time-pulse" id="time-pulse"></div>
+      <div style="display: flex; gap: 1.5rem; align-items: center;">
+        <div>
+          <span>เวลาจำลอง: </span>
+          <strong id="sim-clock" style="color: var(--color-cyan);">วัน 01 | 00:00</strong>
+        </div>
+        <div style="border-left: 1px dashed var(--border-color); padding-left: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>กำไรสุทธิ: </span>
+          <strong id="hud-net-profit" class="profit-text">$0</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating Onboarding Tour Banner -->
+  <div class="tutorial-banner" id="tutorial-banner">
+    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; width: 100%;">
+      <div style="background: rgba(0, 242, 254, 0.15); color: var(--color-cyan); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(0, 242, 254, 0.3); font-family: monospace;">
+        🎓 ขั้นแนะนำ (<span id="tour-step-num">1</span>/5)
+      </div>
+      <div style="flex-grow: 1; min-width: 250px;">
+        <strong id="tour-step-title" style="color: var(--text-primary); font-size: 0.85rem; display: block; margin-bottom: 0.2rem;">ยินดีต้อนรับสู่ระบบจำลองโรงงานดิจิทัล</strong>
+        <p id="tour-step-desc" style="color: var(--text-secondary); font-size: 0.75rem; margin: 0; line-height: 1.4;">หน้าผังโรงงานจำลอง (Factory Floor) แสดงสายพานลำเลียงเครื่องจักรและการจำลองคิวแบบเรียลไทม์ ชิ้นงานจะไหลจาก S1 ไปยัง S5</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" id="btn-tour-next">ถัดไป ➔</button>
+        <button class="btn btn-sm" id="btn-tour-skip">ข้ามคำแนะนำ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Container -->
+  <main class="dashboard">
+
+    <!-- LEFT COLUMN: CONTROLS & SCHEDULES -->
+    <section>
+      
+      <!-- Time Speed Controls -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">⏰ ควบคุมเวลาจำลอง (Speed Panel)</h2>
+        </div>
+        <div class="btn-group" style="margin-bottom: 0.75rem;">
+          <button class="btn btn-sm active" id="btn-speed-min" title="1 วินาทีจริง = 1 นาทีจำลอง">นาที (Min)</button>
+          <button class="btn btn-sm" id="btn-speed-hr" title="1 วินาทีจริง = 1 ชั่วโมงจำลอง">ชั่วโมง (Hr)</button>
+          <button class="btn btn-sm" id="btn-speed-day" title="1 วินาทีจริง = 1 วันจำลอง">วัน (Day)</button>
+        </div>
+        <button class="btn btn-primary" id="btn-fast-forward" style="width: 100%; margin-bottom: 0.5rem;" title="ข้ามการคำนวณจำลองไปยังสิ้นเดือน 30 วันทันที">
+          ⏩ รันข้าม 30 วันทันที (Monthly Jump)
+        </button>
+        <div class="btn-group">
+          <button class="btn btn-cyan" id="btn-sim-play">▶️ เล่น</button>
+          <button class="btn" id="btn-sim-pause">⏸️ หยุดชั่วคราว</button>
+          <button class="btn" id="btn-sim-reset">🔄 รีเซ็ต</button>
+        </div>
+      </div>
+
+      <!-- Production & PM Planner Card -->
+      <div class="card" id="planner-card">
+        <div class="card-header">
+          <h2 class="card-title">📋 แผนผลิต & ซ่อมบำรุง (IE Production & PM Planner)</h2>
+        </div>
+        
+        <!-- Section 1: Multi-Product Production Mix -->
+        <div style="margin-bottom: 1rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.75rem;">
+          <h3 style="font-size: 0.8rem; color: var(--color-cyan); margin-bottom: 0.5rem; font-family: monospace;">📦 สัดส่วนการผลิตสินค้า (Product Mix Ratio)</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+              <span style="color: var(--color-cyan);">Alpha (ฟ้า - $100):</span>
+              <div style="display: flex; align-items: center; gap: 0.25rem;">
+                <input type="range" id="mix-alpha" min="0" max="100" value="40" style="width: 80px;" oninput="adjustProdMix('alpha')">
+                <span id="mix-alpha-lbl" style="width: 30px; text-align: right; font-family: monospace;">40%</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+              <span style="color: var(--color-magenta);">Beta (ชมพู - $150):</span>
+              <div style="display: flex; align-items: center; gap: 0.25rem;">
+                <input type="range" id="mix-beta" min="0" max="100" value="35" style="width: 80px;" oninput="adjustProdMix('beta')">
+                <span id="mix-beta-lbl" style="width: 30px; text-align: right; font-family: monospace;">35%</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+              <span style="color: var(--color-amber);">Gamma (เหลือง - $250):</span>
+              <div style="display: flex; align-items: center; gap: 0.25rem;">
+                <input type="range" id="mix-gamma" min="0" max="100" value="25" style="width: 80px;" oninput="adjustProdMix('gamma')">
+                <span id="mix-gamma-lbl" style="width: 30px; text-align: right; font-family: monospace;">25%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Automated PM Scheduler -->
+        <div>
+          <h3 style="font-size: 0.8rem; color: var(--color-indigo); margin-bottom: 0.5rem; font-family: monospace;">🛠️ วางแผนซ่อมบำรุงอัตโนมัติ (Auto-PM Schedule)</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>S2 (Robot Paint):</span>
+              <select id="autopm-s2" style="font-size: 0.72rem; padding: 0.15rem 0.35rem;" onchange="updateAutoPmSettings()">
+                <option value="off">ปิด (Manual)</option>
+                <option value="40">สึกหรอ > 40%</option>
+                <option value="60" selected>สึกหรอ > 60%</option>
+                <option value="80">สึกหรอ > 80%</option>
+              </select>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>S3 (QA Scan):</span>
+              <select id="autopm-s3" style="font-size: 0.72rem; padding: 0.15rem 0.35rem;" onchange="updateAutoPmSettings()">
+                <option value="off">ปิด (Manual)</option>
+                <option value="40">สึกหรอ > 40%</option>
+                <option value="60" selected>สึกหรอ > 60%</option>
+                <option value="80">สึกหรอ > 80%</option>
+              </select>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>S4 (Rework):</span>
+              <select id="autopm-s4" style="font-size: 0.72rem; padding: 0.15rem 0.35rem;" onchange="updateAutoPmSettings()">
+                <option value="off">ปิด (Manual)</option>
+                <option value="40">สึกหรอ > 40%</option>
+                <option value="60" selected>สึกหรอ > 60%</option>
+                <option value="80">สึกหรอ > 80%</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scenarios / Challenges -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🎮 ภารกิจท้าทาย (IE Quests)</h2>
+        </div>
+        <div class="form-group">
+          <select id="select-challenge">
+            <option value="free">เล่นอิสระ (Free Play Mode)</option>
+            <option value="quest1">เควส 1: ทลายคอขวด (Bottleneck Buster)</option>
+            <option value="quest2">เควส 2: ควบคุมคุณภาพ (Six Sigma Quest)</option>
+            <option value="quest3">เควส 3: ปฏิวัติลีนไร้คิว (Zero-WIP Lean)</option>
+          </select>
+        </div>
+        <div id="challenge-desc" style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px;">
+          โหมดเล่นอิสระ: ทดลองสร้างเครื่องจักร ปรับตั้งความจุคิว และบริหารจัดการโรงงานตามต้องการ
+        </div>
+      </div>
+
+      <!-- Maintenance Crews Status -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🔧 สถานะทีมช่างบำรุง (PM Crews)</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.25rem;">
+            <span>ช่างบำรุงทีม 1 (Crew 1):</span>
+            <strong id="crew1-status" class="profit-text">ว่าง (FREE)</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>ช่างบำรุงทีม 2 (Crew 2):</span>
+            <strong id="crew2-status" class="profit-text">ว่าง (FREE)</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Urgent Orders -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">⚡ ใบสั่งซื้อเร่งด่วน (Urgent Order)</h2>
+        </div>
+        <div id="urgent-order-box" style="font-size: 0.75rem; line-height: 1.4; color: var(--text-secondary); text-align: center; padding: 0.5rem 0;">
+          <span style="color: var(--text-secondary);">ไม่มีคำสั่งซื้อพิเศษเข้ามาในขณะนี้</span>
+        </div>
+      </div>
+
+      <!-- Event Journal Log -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">📜 บันทึกเหตุการณ์ (SCADA Log)</h2>
+        </div>
+        <div id="scada-journal" style="height: 110px; overflow-y: auto; font-family: monospace; font-size: 0.7rem; color: var(--color-cyan); line-height: 1.5; background: rgba(0,0,0,0.4); padding: 0.4rem; border-radius: 4px;">
+          <div>[00:00 วัน 01] ยินดีต้อนรับสู่ระบบจำลอง Digital Twin...</div>
+          <div>[00:00 วัน 01] ตั้งค่าโหมดความเร็วเริ่มต้นแบบรายวัน</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- CENTER COLUMN: VISUAL SIMULATOR (FACTORY FLOOR) -->
+    <section style="display: flex; flex-direction: column; gap: 1.25rem;">
+      
+      <!-- Alarm Warning Banner -->
+      <div class="emergency-banner" id="alarm-banner">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.2rem;">⚠️</span>
+          <div>
+            <strong style="color: var(--text-primary); font-size: 0.85rem;" id="alarm-title">เกิดข้อบกพร่องสะสมที่เครื่องจักร!</strong>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);" id="alarm-subtitle">กรุณากดจัดการเพื่อหลีกเลี่ยงการพังและค่าปรับ</div>
+          </div>
+        </div>
+        <button class="btn btn-cyan btn-sm" id="btn-alarm-fix">🔧 แก้ไขด่วน (Click to Fix)</button>
+      </div>
+
+      <!-- Canvas Panel -->
+      <div class="view-wrapper">
+        <div class="tabs-nav" style="padding: 0.5rem 1rem 0 1rem; border-bottom: 1px solid var(--border-color);">
+          <button class="tab-btn active" id="tab-floor-btn">🏭 ผังจำลองโรงงาน (Factory Floor)</button>
+          <button class="tab-btn" id="tab-logic-btn">📊 ผังการทำงาน Arena (Logic Flow)</button>
+          <button class="tab-btn" id="tab-opt-btn">🧠 ค้นหาค่าออปติมอล (AI Optimization)</button>
+        </div>
+
+        <!-- Factory Floor Canvas View -->
+        <div class="tab-content active" id="tab-floor">
+          <canvas class="simulation-canvas" id="simulation-canvas" width="800" height="460"></canvas>
+        </div>
+
+        <!-- Logic Block View -->
+        <div class="tab-content" id="tab-logic" style="padding: 1.5rem; background: #060912; min-height: 460px; font-family: monospace;">
+          <div id="logic-flow-view" style="display: flex; flex-direction: column; gap: 1.5rem; justify-content: center; height: 100%;">
+            <!-- Rendered in Javascript -->
+          </div>
+        </div>
+
+        <!-- Metaheuristics Optimization View -->
+        <div class="tab-content" id="tab-opt" style="padding: 1.5rem; background: #060912; min-height: 460px; font-family: monospace;">
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; height: 100%;">
+            
+            <!-- Left: Settings & Controls -->
+            <div style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <h3 style="color: var(--color-cyan); font-size: 0.95rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.25rem;">🧠 ค้นหาค่าตั้งค่าสถานีที่ดีที่สุดด้วย AI (Metaheuristics Optimizer)</h3>
+                <p style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.45; margin-bottom: 0.75rem;">
+                  ในวิศวกรรมการผลิต การปรับสมดุลสายการผลิต (Line Balancing) มีตัวแปรขัดแย้งกันจำนวนมาก การจำลองแบบ Metaheuristics สามารถหาคำตอบใกล้เคียงจุดที่เหมาะสมที่สุด (Near-Optimal) เพื่อนำมาตั้งค่า Cycle Time และขนาดคิวของแต่ละสถานี
+                </p>
+                
+                <div style="margin-bottom: 0.5rem;">
+                  <label style="font-size: 0.72rem; color: var(--text-primary); display: block; margin-bottom: 0.2rem;">1. เลือกเมตาฮิวริสติกส์ (Metaheuristic Algorithm):</label>
+                  <select id="opt-algo" style="font-size: 0.72rem; width: 100%; padding: 0.25rem 0.5rem; background: #0d1222; border: 1px solid var(--border-color); color: #fff; outline: none; border-radius: 4px;">
+                    <option value="sa">Simulated Annealing (SA) - การอบชุบเหล็กจำลอง</option>
+                    <option value="ga">Genetic Algorithm (GA) - อัลกอริทึมพันธุกรรม</option>
+                  </select>
+                </div>
+                
+                <div style="margin-bottom: 0.75rem;">
+                  <label style="font-size: 0.72rem; color: var(--text-primary); display: block; margin-bottom: 0.2rem;">2. เป้าหมายการคำนวณ (Objective Optimization):</label>
+                  <select id="opt-obj" style="font-size: 0.72rem; width: 100%; padding: 0.25rem 0.5rem; background: #0d1222; border: 1px solid var(--border-color); color: #fff; outline: none; border-radius: 4px;">
+                    <option value="profit">Maximize Net Profit (หาผลกำไรรวมสูงสุด)</option>
+                    <option value="wip">Minimize Avg WIP (ลดชิ้นงานค้างในไลน์ต่ำสุด)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <button class="btn btn-cyan" id="btn-opt-run" style="width: 100%; font-weight: bold; font-size: 0.8rem; padding: 0.5rem;">⚡ เริ่มคำนวณหาค่าออปติมอล (Run Optimization)</button>
+              </div>
+            </div>
+            
+            <!-- Right: Live Convergence Curve & Results -->
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; min-height: 380px;">
+              <div>
+                <h4 style="font-size: 0.75rem; color: var(--text-primary); margin-bottom: 0.4rem; font-family: monospace;">📈 กราฟแสดงความก้าวหน้าคำตอบ (Convergence Curve)</h4>
+                <canvas id="opt-chart-canvas" width="280" height="130" style="background:#04070f; border: 1px solid rgba(255,255,255,0.05); border-radius: 4px; display: block; width: 100%; height: 130px;"></canvas>
+                <div id="opt-progress-lbl" style="font-size: 0.7rem; color: var(--color-cyan); margin-top: 0.4rem; font-family: monospace; text-align: center;">สถานะ: รอสั่งการรัน...</div>
+              </div>
+              
+              <div id="opt-results-box" style="display: none; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 0.4rem;">
+                <span style="font-size: 0.75rem; font-weight: bold; color: var(--color-emerald); display: block; margin-bottom: 0.4rem;">🏆 คำตอบการตั้งค่าที่ดีที่สุด (Optimal Configuration)</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; font-size: 0.7rem; line-height: 1.4; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                  <div>S2 Cycle: <strong id="res-s2-c" style="color: var(--color-cyan);">-</strong></div>
+                  <div>S2 Queue: <strong id="res-s2-q" style="color: var(--color-cyan);">-</strong></div>
+                  <div>S3 Cycle: <strong id="res-s3-c" style="color: var(--color-cyan);">-</strong></div>
+                  <div>S3 Queue: <strong id="res-s3-q" style="color: var(--color-cyan);">-</strong></div>
+                  <div>S4 Cycle: <strong id="res-s4-c" style="color: var(--color-cyan);">-</strong></div>
+                  <div>S4 Queue: <strong id="res-s4-q" style="color: var(--color-cyan);">-</strong></div>
+                </div>
+                <button class="btn btn-cyan btn-sm" id="btn-opt-apply" style="width: 100%; font-size: 0.72rem;">📥 ใช้งานการตั้งค่าออปติมอลนี้ทันที</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Config & Data Table -->
+      <div class="card" style="margin-bottom: 0;">
+        <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+          <h2 class="card-title">⚙️ ตารางปรับแต่งและควบคุมสถานี (Station Configurations)</h2>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <select id="add-station-type" style="width: 150px; padding: 0.25rem 0.5rem; font-size: 0.75rem;">
+              <option value="process">🤖 สถานีหุ่นยนต์ขัดสี</option>
+              <option value="inspect">🔍 สถานีสแกนตรวจสอบ</option>
+              <option value="rework">🔄 สถานีซ่อมแก้งาน</option>
+            </select>
+            <button class="btn btn-cyan btn-sm" id="btn-add-station">➕ เพิ่มสถานี</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="scada-table" id="table-stations">
+            <thead>
+              <tr>
+                <th>สถานี (ID)</th>
+                <th>ประเภท</th>
+                <th>เวลาทำงาน (Cycle)</th>
+                <th>ขนาดคิว (Max)</th>
+                <th>จัดคิว</th>
+                <th>กำลังช่าง</th>
+                <th>อัตราผิดพลาด/พัง</th>
+                <th>เร่งกำลัง (OC)</th>
+                <th>สถานะ</th>
+                <th>ดำเนินการ</th>
+              </tr>
+            </thead>
+            <tbody id="table-stations-body">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: FINANCIAL LEDGER & KPIS -->
+    <section>
+      
+      <!-- Financial Ledger -->
+      <div class="card ledger-card">
+        <div class="card-header">
+          <h2 class="card-title">💰 บัญชีรายรับ-รายจ่าย (Financial ledger)</h2>
+        </div>
+        <div class="ledger-list">
+          <div class="ledger-item">
+            <span>รายได้ส่งออก (Revenue):</span>
+            <strong id="led-revenue">$0</strong>
+          </div>
+          <div class="ledger-item">
+            <span>วัตถุดิบ/พลังงาน (Ops):</span>
+            <strong id="led-ops" style="color: var(--color-rose);">- $0</strong>
+          </div>
+          <div class="ledger-item">
+            <span>ซ่อมเชิงป้องกัน (PM):</span>
+            <strong id="led-pm" style="color: var(--color-rose);">- $0</strong>
+          </div>
+          <div class="ledger-item">
+            <span>ต้นทุนงานเสีย (Rework):</span>
+            <strong id="led-rework" style="color: var(--color-rose);">- $0</strong>
+          </div>
+          <div class="ledger-item">
+            <span>ค่าปรับสายหยุด (Downtime):</span>
+            <strong id="led-downtime" style="color: var(--color-rose);">- $0</strong>
+          </div>
+          <div class="ledger-item net-profit">
+            <span>กำไรสุทธิ (Net Profit):</span>
+            <strong id="led-net" class="profit-text">$0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Realtime KPI Counters -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">📈 สรุปประสิทธิผลระบบ (Live KPIs)</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.8rem; margin-bottom: 0.75rem;">
+          <div style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px; text-align: center;">
+            <span style="color: var(--text-secondary); display: block; font-size: 0.7rem;">ชิ้นงานระหว่างทำ (WIP)</span>
+            <strong id="kpi-wip" style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-cyan);">0 ชิ้น</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px; text-align: center;">
+            <span style="color: var(--text-secondary); display: block; font-size: 0.7rem;">อัตราผลิต (Throughput)</span>
+            <strong id="kpi-throughput" style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-emerald);">0 ชิ้น</strong>
+          </div>
+        </div>
+        <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-color);">
+          <div style="display: flex; justify-content: space-between;">
+            <span>คอขวดปัจจุบัน (Bottleneck):</span>
+            <strong id="kpi-bottleneck" style="color: var(--color-amber);">ไม่มี</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>ชิ้นงานผ่านการคัดแยก (Yield):</span>
+            <strong id="kpi-yield" style="color: var(--color-emerald);">100%</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Charts Widget -->
+      <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+          <h2 class="card-title">📊 กราฟวิเคราะห์ประสิทธิภาพ (Performance Trend)</h2>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+          <span>ปริมาณชิ้นงานสะสมในแถวคอยหลัก (Queue Sizes)</span>
+        </div>
+        <canvas id="live-chart-canvas" width="300" height="150" style="background:#04070f; border: 1px solid var(--border-color); border-radius: 4px; display: block; width: 100%;"></canvas>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Save/Load Configuration Bar -->
+  <div style="max-width: 1600px; margin: 1rem auto 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <button class="btn btn-sm btn-cyan" id="btn-tour-start">🎓 เริ่มสอนใช้งาน (Start Tour)</button>
+      <button class="btn btn-sm" id="btn-guide-toggle">📖 แผงทฤษฎีเรียนลัด (IE Cheat Sheet)</button>
+      <button class="btn btn-sm" id="btn-export-homework">📝 รายงานและส่งการบ้าน (Homework Reporter)</button>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <input type="text" id="input-state-code" placeholder="วางโค้ดบันทึกโรงงานที่นี่..." style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.75rem; padding: 0.35rem 0.50rem; border-radius: 4px; width: 160px; outline: none; font-family: monospace;">
+      <button class="btn btn-sm" id="btn-save-code">💾 เซฟโรงงาน</button>
+      <button class="btn btn-sm btn-cyan" id="btn-load-code">📥 โหลดโรงงาน</button>
+    </div>
+  </div>
+
+  <!-- DIGITAL TWIN / MACHINE CONFIGURATION MODAL -->
+  <div class="modal-overlay" id="twin-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="twin-machine-title">🤖 ห้องควบคุมแฝดดิจิทัล: MACHINE 1</h3>
+        <button class="modal-close" id="btn-close-twin">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="twin-grid">
+          
+          <!-- Left: IoT Sensors -->
+          <div class="iot-panel">
+            <h4 style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-cyan); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.25rem;">📡 สัญญาณเซนเซอร์เรียลไทม์ (IoT Sensors)</h4>
+            <div class="oscilloscope-container">
+              <canvas class="oscilloscope-canvas" id="twin-oscilloscope"></canvas>
+            </div>
+            <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <div class="sensor-gauge">
+                <span>ความสั่นสะเทือนรวม (Vibration RMS):</span>
+                <strong id="twin-vibe-val">1.2 mm/s</strong>
+              </div>
+              <div class="sensor-gauge">
+                <span>อุณหภูมิห้องเครื่อง (Temperature):</span>
+                <strong id="twin-temp-val">38.4 °C</strong>
+              </div>
+              <div class="sensor-gauge">
+                <span>อัตราการสึกหรอสะสม (Wear level):</span>
+                <strong id="twin-wear-val" style="color: var(--color-amber);">10%</strong>
+              </div>
+              <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; border: 1px solid var(--border-color);">
+                <div id="twin-wear-bar" style="height: 100%; width: 10%; background: linear-gradient(90deg, var(--color-emerald), var(--color-amber)); transition: width 0.3s;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: PINN & PM Plan -->
+          <div class="iot-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h4 style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-indigo); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.25rem;">🧠 ตัวทำนายความเสี่ยงฟิสิกส์ (PINN Diagnostics)</h4>
+              <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 6px; font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);">
+                <div>เวลาทำงานก่อนเครื่องพัง (Estimated TTF):</div>
+                <strong id="twin-ttf" style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--color-cyan); display: block; margin: 0.25rem 0;">45.2 ชั่วโมง</strong>
+                <div id="twin-pinn-advice" style="font-size: 0.72rem; color: var(--color-emerald); border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 0.4rem; margin-top: 0.4rem;">
+                  ✅ ข้อมูลความสั่นสะเทือนสอดคล้องกับขอบเขตมาตรฐาน ISO 10816 ระดับสภาวะปกติ (Zone A) ไม่พบความเสี่ยงชำรุดระยะใกล้
+                </div>
+              </div>
+            </div>
+
+            <!-- Preventive Maintenance Dispatch Controls -->
+            <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem;">
+              <span style="font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 0.5rem; color: var(--text-primary);">🛠️ ส่งพนักงานซ่อมบำรุงเชิงป้องกัน (Schedule PM)</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-bottom: 0.4rem;">
+                <button class="btn btn-sm" id="btn-pm-lube" title="หยอดน้ำมันหล่อลื่น ลดความร้อนและลดความสึกหรอเบื้องต้น">💧 หยอดน้ำมัน ($50)</button>
+                <button class="btn btn-sm" id="btn-pm-calib" title="ตั้งค่าสอบเทียบเครื่องมือ ลดการแกว่งและการสั่นสะเทือนชั่วคราว">🎯 สอบเทียบเครื่อง ($150)</button>
+              </div>
+              <button class="btn btn-cyan btn-sm" id="btn-pm-overhaul" style="width: 100%;" title="ซ่อมแซมใหญ่เปลี่ยนลูกปืนแกนหมุน รีเซ็ตค่าความสึกหรอกลับเป็น 0%">⚙️ ยกเครื่องใหม่ - Overhaul ($500)</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom: DOE Laboratory -->
+        <div class="iot-panel" style="margin-top: 1.25rem;">
+          <h4 style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-amber); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.25rem;">🔬 แบบจำลองการออกแบบการทดลองประจำสถานี (Factorial DOE Lab)</h4>
+          <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.4;">
+            ทดลองปรับตั้งค่า **ความเร็วการผลิต (Factor A)** และ **การใช้สารหล่อลื่น (Factor B)** เพื่อวิเคราะห์ผลกระทบ (Main Effects) ที่เหมาะสมที่สุดในการลดอัตรารวมของแรงสั่นสะเทือน
+          </p>
+          <div style="display: flex; gap: 1.25rem; align-items: start; flex-wrap: wrap;">
+            
+            <div style="flex: 2; min-width: 250px;">
+              <table class="scada-table" style="font-size: 0.75rem;">
+                <thead>
+                  <tr style="height: 30px;">
+                    <th style="padding: 0.3rem 0.5rem;">Trial</th>
+                    <th style="padding: 0.3rem 0.5rem; text-align: center;">ความเร็ว (A)</th>
+                    <th style="padding: 0.3rem 0.5rem; text-align: center;">การหล่อลื่น (B)</th>
+                    <th style="padding: 0.3rem 0.5rem; text-align: center;">การสั่นสะเทือน (Vibe)</th>
+                    <th style="padding: 0.3rem 0.5rem; text-align: center;">เวลารอบ (Cycle)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding: 0.3rem 0.5rem;">1 (A- / B-)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-rose);">ต่ำ (50%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-rose);">น้อย (20%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t1-v">-</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t1-c">-</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 0.3rem 0.5rem;">2 (A+ / B-)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-emerald);">สูง (100%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-rose);">น้อย (20%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t2-v">-</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t2-c">-</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 0.3rem 0.5rem;">3 (A- / B+)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-rose);">ต่ำ (50%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-emerald);">มาก (80%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t3-v">-</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t3-c">-</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 0.3rem 0.5rem;">4 (A+ / B+)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-emerald);">สูง (100%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center; color: var(--color-emerald);">มาก (80%)</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t4-v">-</td>
+                    <td style="padding: 0.3rem 0.5rem; text-align: center;" id="doe-t4-c">-</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+                <button class="btn btn-cyan btn-sm" id="btn-doe-run-local">🔬 รันการทดลอง 2² (Run Trials) ($200)</button>
+                <button class="btn btn-sm" id="btn-doe-apply-local" disabled>📥 บันทึกค่าที่เหมาะสมที่สุด (Apply Optimal)</button>
+              </div>
+            </div>
+
+            <!-- Mini effects chart rendering -->
+            <div style="flex: 1.5; min-width: 200px; display: flex; flex-direction: column; gap: 0.5rem; height: 130px; justify-content: center; background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border-color);">
+              <div style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-bottom: 0.25rem;">ผลกระทบหลักต่อการสั่นสะเทือน (Vibe Effects)</div>
+              
+              <div style="display: flex; align-items: center; font-size: 0.7rem;">
+                <span style="width: 120px;">A: ความเร็วการผลิต</span>
+                <div style="flex-grow: 1; height: 10px; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-color);">
+                  <div id="doe-effect-a" style="height: 100%; width: 0%; background: var(--color-rose);"></div>
+                </div>
+                <span style="width: 40px; text-align: right;" id="doe-effect-a-val">0.0</span>
+              </div>
+              
+              <div style="display: flex; align-items: center; font-size: 0.7rem;">
+                <span style="width: 120px;">B: การใช้สารหล่อลื่น</span>
+                <div style="flex-grow: 1; height: 10px; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-color);">
+                  <div id="doe-effect-b" style="height: 100%; width: 0%; background: var(--color-emerald);"></div>
+                </div>
+                <span style="width: 40px; text-align: right;" id="doe-effect-b-val">0.0</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTHLY EVALUATION SCORECARD MODAL -->
+  <div class="modal-overlay" id="scorecard-modal">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">📊 รายงานสรุปผลงานวิศวกรประจำเดือน</h3>
+        <button class="modal-close" id="btn-close-scorecard">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        
+        <div class="grade-circle" id="score-grade">A</div>
+        <h4 id="score-title" style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.5rem;">ผลการดำเนินงานยอดเยี่ยม!</h4>
+        <p id="score-desc" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.25rem;">
+          คุณสามารถนำพาสายการผลิตให้ได้กำไรสะสมสูงและหลีกเลี่ยงเหตุการณ์เครื่องจักรชำรุดเสียหายได้อย่างดีเยี่ยม สมดุลสายการผลิตอยู่ในระดับลีนสมบูรณ์แบบ
+        </p>
+
+        <div class="grading-grid">
+          <div class="grading-item">
+            <span>กำไรสุทธิสะสม</span>
+            <strong id="score-net">$0</strong>
+          </div>
+          <div class="grading-item">
+            <span>ความสมดุลสายผลิต</span>
+            <strong id="score-balance">0%</strong>
+          </div>
+          <div class="grading-item">
+            <span>เครื่องจักรทำงานต่อเนื่อง</span>
+            <strong id="score-uptime">0%</strong>
+          </div>
+          <div class="grading-item">
+            <span>ชิ้นงานผ่านเกณฑ์ QA</span>
+            <strong id="score-yield">0%</strong>
+          </div>
+        </div>
+
+        <button class="btn btn-cyan" id="btn-score-restart" style="width: 100%; margin-top: 1.5rem;">🔄 เล่นใหม่อีกครั้ง (Reset Game)</button>
+        <button class="btn btn-indigo" id="btn-score-export-csv" style="width: 100%; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;" onclick="exportSimulationCsv()">📥 ส่งออกข้อมูลโรงงานเป็น CSV (Export CSV)</button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING MANUAL OVERLAY (IE Cheat Sheet) -->
+  <div class="manual-overlay" id="guide-manual">
+    <div style="background: rgba(255,255,255,0.01); padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: #0d1222; z-index: 10;">
+      <h3 style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-indigo); display: flex; align-items: center; gap: 0.4rem;">📖 คู่มือความรู้เรียนลัด (IE Cheat Sheet)</h3>
+      <button class="modal-close" id="btn-close-guide" style="font-size:1.1rem;">&times;</button>
+    </div>
+    <div style="padding: 1rem; font-size: 0.78rem; line-height: 1.6; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.75rem;">
+      <div>
+        <strong style="color: var(--text-primary);">1. การจัดสมดุลสายการผลิต (Line Balancing)</strong>
+        <p>การกระจายโหลดงานในแต่ละเครื่องเพื่อแก้ปัญหาคอขวด (Bottleneck) โดยการปรับแต่ง Cycle Time ให้นิ่งและลดขนาดแถวคอยที่คั่งค้างเพื่อให้การส่งต่องานเป็นไปตาม Takt Time</p>
+      </div>
+      <div>
+        <strong style="color: var(--text-primary);">2. มาตรฐานการสั่นสะเทือน ISO 10816</strong>
+        <p>ใช้ประเมินสุขภาพเครื่องจักร: ค่าสั่นสะเทือน <strong style="color: var(--color-emerald);">0-1.8</strong> คือ Zone A (ปกติ), <strong style="color: var(--color-amber);">1.8-4.5</strong> คือ Zone B (เริ่มสึกหรอ) และ <strong style="color: var(--color-rose);">> 4.5</strong> คือ Zone C/D (อันตรายถึงพังชำรุด)</p>
+      </div>
+      <div>
+        <strong style="color: var(--text-primary);">3. การบำรุงรักษาเชิงคาดการณ์ด้วย PINN</strong>
+        <p>ตัวฟิสิกส์แฝดดิจิทัลจะประมวลผลอุณหภูมิสะสมที่ผันแปรตามความเสียดทานความเร็วเครื่องจักร และการแกว่งของการสั่นสะเทือนเพื่อส่งเสียงเตือนล่วงหน้าก่อนที่จะพังจริง (Downtime Penalty โดนปรับนาทีละ $500)</p>
+      </div>
+      <div>
+        <strong style="color: var(--text-primary);">4. แล็บทดลองวิเคราะห์เครื่องจักร (Factorial DOE)</strong>
+        <p>การปรับความเร็วผลิตและทาสารหล่อลื่นส่งผลขัดแย้งกัน การรันการทดลอง 4 ครั้งจะแสดงผล Main Effects ว่าปัจจัยใดส่งอิทธิพลต่อแรงสั่นสะเทือนมากที่สุด เพื่อเลือกระดับปรับตั้งค่าที่เหมาะสมที่สุด (Optimal Settings)</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

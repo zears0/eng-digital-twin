@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TwinEdu Labs - Lean, AIoT, Metaheuristic & ML/PINN Digital Twin</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2-2 0-3.5 1.5-3.5 3.5H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+        </svg>
+      </div>
+      <span class="brand-name">TwinEdu Labs</span>
+    </div>
+    
+    <ul class="nav-menu">
+      <li class="nav-item active" data-page="lean">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18M18 9l-5 5-3-3-4 4"/>
+          </svg>
+          Lean Line Balancing
+        </button>
+      </li>
+      <li class="nav-item" data-page="aiot">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="8" rx="2"/>
+            <rect x="2" y="14" width="20" height="8" rx="2"/>
+            <path d="M6 6h.01M6 18h.01"/>
+          </svg>
+          AIoT Motor Twin
+        </button>
+      </li>
+      <li class="nav-item" data-page="meta">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          Metaheuristic Lab
+        </button>
+      </li>
+      <li class="nav-item" data-page="ml">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+          ML & PINN Sandbox
+        </button>
+      </li>
+      <li class="nav-item" data-page="traffic">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="6" r="2" fill="currentColor"/>
+            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+            <circle cx="12" cy="18" r="2" fill="currentColor"/>
+          </svg>
+          Smart Traffic Lab
+        </button>
+      </li>
+      <li class="nav-item" data-page="catapult">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="6" cy="18" r="3"/>
+            <path d="M20 4L10 14M20 4c-2 0-4 1-5 3L8 16M20 4v6M8 20h12"/>
+          </svg>
+          Catapult & DOE Lab
+        </button>
+      </li>
+      <li class="nav-item" data-page="theory">
+        <button>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+          บทเรียน & ทฤษฎี
+        </button>
+      </li>
+    </ul>
+    
+    <div class="sidebar-footer">
+      <button class="theme-toggle-btn" id="theme-toggle">
+        <span>🌙</span> โหมดมืด
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    
+    <!-- PAGE 1: LEAN LINE BALANCING -->
+    <div id="lean-page" class="page-container active">
+      <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <h1 id="lean-page-title" class="pixel-art-title">การปรับสมดุลสายการผลิตเสื้อผ้า</h1>
+          <p class="pixel-art-subtitle" id="lean-page-subtitle">การจำลองสถานการณ์และจัดสรรกำลังคนในสายการผลิตเพื่อขจัดความสูญเสีย (Lean Line Balancing & WIP Simulation)</p>
+        </div>
+        <div class="input-field" style="width: 250px;">
+          <label class="input-label" style="font-size:0.8rem; font-weight:600; color:var(--color-cyan);">เลือกสถานการณ์จำลอง:</label>
+          <select id="lean-scenario-select" class="btn" style="width:100%; background: var(--bg-secondary); border-color: var(--border-color); padding: 0.5rem 0.75rem; font-size: 0.85rem; text-align: left; justify-content: space-between;">
+            <option value="garment">👕 โรงงานเย็บเสื้อผ้า (Garment Factory)</option>
+            <option value="bubbletea">🧋 ร้านชานมไข่มุก (Bubble Tea Shop)</option>
+            <option value="burger">🍔 ร้านทำเบอร์เกอร์ (Burger Kitchen)</option>
+          </select>
+        </div>
+      </header>
+      
+      <!-- Key Metrics -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--kpi-color: var(--color-cyan);">
+          <span class="kpi-label">Takt Time (เป้าหมายลูกค้า)</span>
+          <div class="kpi-value" id="kpi-takt">0.0<span class="kpi-unit">วินาที/ตัว</span></div>
+        </div>
+        <div class="kpi-card" id="kpi-bottleneck-card">
+          <span class="kpi-label">เวลาคอขวด (Bottleneck CT)</span>
+          <div class="kpi-value" id="kpi-bottleneck">0.0<span class="kpi-unit">วินาที</span></div>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">ประสิทธิภาพสายผลิต (Efficiency)</span>
+          <div style="display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-start; margin-top: 0.3rem;">
+            <div style="font-size: 0.75rem; color: var(--color-amber);">ดั้งเดิม: <span id="kpi-eff-trad" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0.0%</span></div>
+            <div style="font-size: 0.75rem; color: var(--color-cyan);">แบบลีน: <span id="kpi-eff-lean" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0.0%</span></div>
+          </div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-indigo);">
+          <span class="kpi-label">เวลานำเฉลี่ย (Avg Lead Time)</span>
+          <div style="display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-start; margin-top: 0.3rem;">
+            <div style="font-size: 0.75rem; color: var(--color-amber);">ดั้งเดิม: <span id="kpi-lt-trad" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0.0s</span></div>
+            <div style="font-size: 0.75rem; color: var(--color-cyan);">แบบลีน: <span id="kpi-lt-lean" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0.0s</span></div>
+          </div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-amber);">
+          <span class="kpi-label">งานระหว่างทำรวม (Total WIP)</span>
+          <div style="display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-start; margin-top: 0.3rem;">
+            <div style="font-size: 0.75rem; color: var(--color-amber);">ดั้งเดิม: <span id="kpi-wip-trad" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0 ชิ้น</span></div>
+            <div style="font-size: 0.75rem; color: var(--color-cyan);">แบบลีน: <span id="kpi-wip-lean" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0 ชิ้น</span></div>
+          </div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-emerald);">
+          <span class="kpi-label">ผลิตสำเร็จ (Throughput)</span>
+          <div style="display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-start; margin-top: 0.3rem;">
+            <div style="font-size: 0.75rem; color: var(--color-amber);">ดั้งเดิม: <span id="kpi-tp-trad" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0 ชิ้น</span></div>
+            <div style="font-size: 0.75rem; color: var(--color-cyan);">แบบลีน: <span id="kpi-tp-lean" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-mono);">0 ชิ้น</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Dashboard Content -->
+      <div class="dashboard-grid">
+        <!-- Conveyor Simulation -->
+        <div class="card full-width">
+          <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+            <h2 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+              แบบจำลองเปรียบเทียบระบบการผลิต (Comparative Production Flow Simulation)
+            </h2>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">ความเร็ว:</span>
+              <div class="btn-group">
+                <button class="sim-speed-btn active" data-speed="1">1x</button>
+                <button class="sim-speed-btn" data-speed="2">2x</button>
+                <button class="sim-speed-btn" data-speed="5">5x</button>
+              </div>
+              <input type="number" id="sim-speed-input" min="1" max="200" value="1" style="width: 65px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px; padding: 0.25rem 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; text-align: center; box-sizing: border-box;" title="ระบุตัวคูณความเร็วการจำลองเอง">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">เท่า (x)</span>
+            </div>
+          </div>
+          
+          <div class="conveyor-belt-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; padding: 1rem 0;">
+            <!-- Traditional System Row -->
+            <div class="comparison-row">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; padding: 0 0.5rem;">
+                <span style="font-weight: bold; color: var(--color-amber); font-size: 0.95rem;">🏭 ระบบผลิตแบบปกติ (Traditional Parallel Batch - ช่างทุกคนทำทุกขั้นตอนแบบขนาน รุ่นละ 5 ชิ้น)</span>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);" id="traditional-summary">WIP: 0 | ผลผลิต: 0 | เวลานำเฉลี่ย: ---</span>
+              </div>
+              <div id="conveyor-belt-traditional" style="display: flex; flex-direction: column; gap: 0.4rem; width: 100%; min-width: 800px; padding: 0.2rem 0;">
+                <!-- Rendered via JS as parallel workers -->
+              </div>
+            </div>
+            
+            <!-- Divider -->
+            <div style="border-top: 1px dashed var(--border-color); margin: 0.5rem 0;"></div>
+            
+            <!-- Lean System Row -->
+            <div class="comparison-row">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; padding: 0 0.5rem;">
+                <span style="font-weight: bold; color: var(--color-cyan); font-size: 0.95rem;">✨ ระบบผลิตแบบลีน (Lean Sequential Flow - แบ่งงานกันทำตามแผนภาพ ไหลทีละ 1 ชิ้น, คลังจำกัด Kanban = 2)</span>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);" id="lean-summary">WIP: 0 | ผลผลิต: 0 | เวลานำเฉลี่ย: ---</span>
+              </div>
+              <div class="conveyor-belt" id="conveyor-belt-lean">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="simulation-controls" style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div class="btn-group">
+              <button class="btn btn-primary" id="btn-play-pause"><span>▶️</span> เริ่มจำลอง</button>
+              <button class="btn" id="btn-reset"><span>🔄</span> รีเซ็ตระบบ</button>
+              <button class="btn btn-warning" id="btn-trigger-breakdown" title="จำลองการเกิดเหตุเครื่องจักรขัดข้องในสายการผลิต"><span>⚡</span> จำลองเครื่องเสีย (Breakdown)</button>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);" id="conveyor-legend">
+              *เปรียบเทียบช่างผลิตแบบต่างคนต่างทำครบวงจร (บน) และแบบแบ่งงานกันทำไหลทีละชิ้นตามสถานี (ล่าง) โดยใช้จำนวนคนเท่ากัน
+            </div>
+          </div>
+        </div>
+        
+        <!-- Setting Parameters -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">⚙️ ตั้งค่าระบบการผลิต (Production Settings)</h2>
+          </div>
+          <div class="control-group">
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">ความต้องการของลูกค้า (Daily Demand)</span>
+                <span class="input-value" id="demand-val">500 ชิ้น</span>
+              </div>
+              <input type="range" id="demand-input" min="100" max="1500" step="50" value="500">
+            </div>
+
+            <div class="input-field" style="margin-top: 0.5rem;">
+              <div class="input-header">
+                <span class="input-label" style="color: var(--color-amber);">ความสูญเสียแฝงระบบ Batch (Hidden Waste)</span>
+                <span class="input-value" id="hidden-waste-val" style="color: var(--color-amber);">20%</span>
+              </div>
+              <input type="range" id="hidden-waste-input" min="0" max="100" step="5" value="20">
+              <div style="font-size: 0.72rem; color: var(--text-secondary); line-height: 1.3; margin-top: 0.15rem;">
+                *เวลาสูญเสียจากการสลับขั้นตอน ปรับตั้งเครื่องจักร และการเดินเอื้อมหยิบของในระบบต่างคนต่างทำ
+              </div>
+            </div>
+            
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">เวลาทำงานต่อวัน (Working Hours)</span>
+                <span class="input-value" id="hours-val">8 ชม.</span>
+              </div>
+              <input type="range" id="hours-input" min="4" max="12" step="0.5" value="8">
+            </div>
+            
+            <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+              <strong>สูตรคำนวณ Takt Time:</strong><br>
+              Takt Time = เวลาเปิดทำงานสุทธิ / ปริมาณความต้องการของลูกค้า<br>
+              เช่น (8 ชั่วโมง × 3600 วินาที) / 500 ชิ้น = <strong>57.6 วินาที/ชิ้น</strong>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Balance Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📊 กราฟเปรียบเทียบเวลาทำงานกับ Takt Time</h2>
+          </div>
+          <div class="chart-container">
+            <canvas id="balance-chart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Dynamic Stations Setup -->
+        <div class="card full-width">
+          <div class="card-header">
+            <h2 class="card-title">🛠️ ปรับแต่งสถานีและจัดสรรจำนวนคนทำงาน (Station & Operator Setup)</h2>
+            <div class="btn-group">
+              <button class="btn" id="btn-add-station">➕ เพิ่มสถานี</button>
+              <button class="btn" id="btn-remove-station">➖ ลบสถานี</button>
+              <button class="btn btn-primary" id="btn-auto-balance">🤖 จัดสมดุลไลน์อัตโนมัติ</button>
+            </div>
+          </div>
+          
+          <div class="station-list" id="station-list">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- PAGE 2: AIoT MOTOR DIGITAL TWIN -->
+    <div id="aiot-page" class="page-container">
+      <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <h1 id="aiot-page-title" class="pixel-art-title">แฝดดิจิทัลมอเตอร์และระบบ AIoT</h1>
+          <p class="pixel-art-subtitle" id="aiot-page-subtitle">จำลองตรวจจับความสั่นสะเทือนมอเตอร์เพื่อวิเคราะห์และคาดการณ์ความเสียหายล่วงหน้า (Vibration Digital Twin & Predictive Maintenance)</p>
+        </div>
+        <div class="input-field" style="width: 250px;">
+          <label class="input-label" style="font-size:0.8rem; font-weight:600; color:var(--color-cyan);">เลือกอุปกรณ์ตรวจวัด:</label>
+          <select id="aiot-device-select" class="btn" style="width:100%; background: var(--bg-secondary); border-color: var(--border-color); padding: 0.5rem 0.75rem; font-size: 0.85rem; text-align: left; justify-content: space-between;">
+            <option value="pump">💧 ปั๊มน้ำอุตสาหกรรม (Industrial Pump)</option>
+            <option value="washer">🧺 เครื่องซักผ้าหยอดเหรียญ (Laundromat Washer)</option>
+            <option value="hvac">🌀 พัดลมแอร์อาคาร (HVAC Fan Motor)</option>
+          </select>
+        </div>
+      </header>
+      
+      <!-- Alert Banner -->
+      <div class="alert-banner" id="alert-banner">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-text">
+          <div class="alert-title" id="alert-title">แจ้งเตือนระดับอันตราย</div>
+          <div class="alert-desc" id="alert-desc">คำอธิบายข้อความความเสียหายของอุปกรณ์</div>
+        </div>
+      </div>
+      
+      <!-- Key Metrics -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--kpi-color: var(--color-emerald);">
+          <span class="kpi-label">ดัชนีสุขภาพเครื่องจักร (Health Index)</span>
+          <div class="kpi-value" id="kpi-health">100%</div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-rose);">
+          <span class="kpi-label">โอกาสชำรุด (Probability of Failure)</span>
+          <div class="kpi-value" id="kpi-prob">0%</div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-cyan);">
+          <span class="kpi-label">อายุการใช้งานที่เหลือ (Remaining Useful Life)</span>
+          <div class="kpi-value" id="kpi-rul">5000 ชม.</div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-cyan);">
+          <span class="kpi-label">ผลการวิเคราะห์ความเสียหาย (AI Diagnosis)</span>
+          <div class="kpi-value" id="kpi-fault" style="font-size: 1.1rem; font-weight: bold; font-family: var(--font-sans); height: 100%; display: flex; align-items: center;">ปกติ (Normal)</div>
+        </div>
+      </div>
+      
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- Motor 3D-like Animation -->
+        <div class="card motor-visualizer-card">
+          <div class="card-header" style="width:100%; position:absolute; top:0; left:0; padding:1.25rem 1.5rem;">
+            <h2 class="card-title">⚙️ แบบจำลองแฝดดิจิทัลมอเตอร์ (Motor Digital Twin)</h2>
+          </div>
+          
+          <div class="motor-container" id="motor-twin">
+            <div class="heat-overlay" id="heat-overlay"></div>
+            <svg class="motor-svg" viewBox="0 0 220 220" style="image-rendering: pixelated;">
+              <!-- Motor Base Feet -->
+              <rect class="motor-base" x="30" y="175" width="160" height="15" fill="#374151" stroke="#1f2937" stroke-width="2" />
+              <rect class="motor-bolts" x="45" y="185" width="12" height="10" fill="#1f2937" />
+              <rect class="motor-bolts" x="163" y="185" width="12" height="10" fill="#1f2937" />
+              
+              <!-- Device-specific casings (Pump, Washer, HVAC) -->
+              <!-- 1. Industrial Pump Casing -->
+              <g id="device-pump">
+                <rect class="motor-stator" x="50" y="50" width="120" height="120" fill="#1e3a8a" stroke="#1d4ed8" stroke-width="3" rx="2" />
+                <rect x="65" y="50" width="6" height="120" fill="#1d4ed8"/>
+                <rect x="85" y="50" width="6" height="120" fill="#1d4ed8"/>
+                <rect x="105" y="50" width="6" height="120" fill="#1d4ed8"/>
+                <rect x="125" y="50" width="6" height="120" fill="#1d4ed8"/>
+                <rect x="145" y="50" width="6" height="120" fill="#1d4ed8"/>
+                <rect x="85" y="32" width="50" height="18" fill="#1f2937" stroke="#374151" stroke-width="2" />
+                <rect x="107" y="38" width="6" height="6" fill="var(--color-cyan)" />
+              </g>
+              
+              <!-- 2. Washing Machine Casing -->
+              <g id="device-washer" style="display: none;">
+                <!-- Square Washer Body -->
+                <rect x="35" y="40" width="150" height="140" fill="#e4e4e7" stroke="#a1a1aa" stroke-width="4" rx="2" />
+                <!-- Front control panel -->
+                <rect x="45" y="48" width="130" height="22" fill="#18181b" />
+                <rect x="55" y="55" width="8" height="8" fill="var(--color-emerald)" />
+                <rect x="70" y="55" width="8" height="8" fill="var(--color-cyan)" />
+                <!-- Washing machine circular glass door (Octagonal) -->
+                <polygon points="80,80 140,80 160,100 160,140 140,160 80,160 60,140 60,100" fill="#1e293b" stroke="#71717a" stroke-width="5" />
+              </g>
+              
+              <!-- 3. HVAC Fan Casing -->
+              <g id="device-hvac" style="display: none;">
+                <!-- Octagonal Fan Shroud -->
+                <polygon points="75,45 145,45 175,75 175,145 145,175 75,175 45,145 45,75" fill="#1f2937" stroke="#4b5563" stroke-width="4" />
+                <!-- Grille lines -->
+                <polygon points="85,60 135,60 155,80 155,135 135,155 85,155 65,135 65,80" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" />
+                <line x1="45" y1="110" x2="175" y2="110" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+                <line x1="110" y1="45" x2="110" y2="175" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+              </g>
+              
+              <rect x="90" y="90" width="40" height="40" fill="rgba(0,0,0,0.3)" />
+              
+              <!-- Spinning rotor with blocky blades -->
+              <g id="motor-rotor" class="motor-rotor">
+                <!-- Center Shaft -->
+                <rect x="104" y="104" width="12" height="12" fill="#9ca3af" stroke="#4b5563" stroke-width="2" />
+                <!-- 4 Blocky Blades -->
+                <rect x="106" y="65" width="8" height="39" fill="#cbd5e1" opacity="0.95" /> <!-- Top -->
+                <rect x="110" y="106" width="39" height="8" fill="#cbd5e1" opacity="0.95" /> <!-- Right -->
+                <rect x="106" y="110" width="8" height="39" fill="#cbd5e1" opacity="0.95" /> <!-- Bottom -->
+                <rect x="65" y="106" width="39" height="8" fill="#cbd5e1" opacity="0.95" /> <!-- Left -->
+                
+                <!-- Indicator lights -->
+                <rect x="107" y="70" width="6" height="6" fill="var(--color-cyan)" />
+                <rect x="135" y="107" width="6" height="6" fill="var(--color-cyan)" />
+                <rect x="107" y="135" width="6" height="6" fill="var(--color-cyan)" />
+                <rect x="70" y="107" width="6" height="6" fill="var(--color-cyan)" />
+              </g>
+            </svg>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:1.5rem; text-align:center;">
+            *จำลองแฝดดิจิทัลจะสั่นตามค่าความสั่นสะเทือน (Vibration) และเปลี่ยนเป็นสีแดงระเรื่อเมื่อความร้อน (Temperature) สูงขึ้น
+          </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🎛️ เครื่องจำลองและสั่งการระบบ (IoT Controller & Fault Injector)</h2>
+          </div>
+          <div class="control-group">
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">ความเร็วรอบมอเตอร์ (Motor Speed)</span>
+                <span class="input-value" id="rpm-val">1500 RPM</span>
+              </div>
+              <input type="range" id="rpm-input" min="0" max="3600" step="100" value="1500">
+            </div>
+            
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">ความสั่นสะเทือนมอเตอร์ (Vibration RMS)</span>
+                <span class="input-value" id="vibration-val">2.5 mm/s</span>
+              </div>
+              <input type="range" id="vibration-input" min="0.1" max="15.0" step="0.1" value="2.5">
+            </div>
+            
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">อุณหภูมิตลับลูกปืน (Bearing Temp)</span>
+                <span class="input-value" id="temp-val">45 °C</span>
+              </div>
+              <input type="range" id="temp-input" min="30" max="110" step="1" value="45">
+            </div>
+            
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+              <span class="input-label" style="font-weight:600; font-size:0.9rem; display:block; margin-bottom:0.75rem;">จำลองสภาวะผิดปกติ (Inject Fault Mode)</span>
+              <div class="btn-group">
+                <button class="btn btn-primary" id="fault-normal" style="flex:1;">ปกติ (Normal)</button>
+                <button class="btn btn-danger" id="fault-unbalance" style="flex:1;">แกนไม่สมดุล</button>
+                <button class="btn btn-danger" id="fault-misalignment" style="flex:1;">เพลาเบี้ยว</button>
+                <button class="btn btn-danger" id="fault-bearing" style="flex:1;">ลูกปืนชำรุด</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Live Vibration Signal & FFT -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📈 สัญญาณคลื่นการสั่นสะเทือน (Vibration Signal Analysis)</h2>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:1.25rem;">
+            <div>
+              <div class="canvas-title">
+                <span>สัญญาณคลื่นเวลาจริง (Time-Domain Waveform)</span>
+                <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-cyan);">Amplitude vs Time</span>
+              </div>
+              <canvas id="time-canvas" class="signal-canvas" height="90"></canvas>
+            </div>
+            <div>
+              <div class="canvas-title">
+                <span>การวิเคราะห์ความถี่สัญญาณ (Frequency-Domain FFT Spectrum)</span>
+                <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-emerald);">Amplitude vs Frequency (Hz)</span>
+              </div>
+              <canvas id="freq-canvas" class="signal-canvas" height="90"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <!-- IoT Gateway (MQTT Stream) -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📟 สัญญาณข้อมูลส่งไปยัง Cloud (IoT MQTT Stream Log)</h2>
+          </div>
+          <div class="terminal-console" id="terminal-console">
+            <!-- Simulated MQTT Telemetry Logs -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: METAHEURISTIC LAB [NEW] -->
+    <div id="meta-page" class="page-container">
+      <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <h1 id="meta-page-title" class="pixel-art-title">ห้องปฏิบัติการอัลกอริทึมเมต้าฮิวริสติก</h1>
+          <p class="pixel-art-subtitle" id="meta-page-subtitle">จำลองและเปรียบเทียบการแก้โจทย์การจัดเส้นทางขนส่งสินค้า (Traveling Salesperson Problem - TSP)</p>
+        </div>
+        <div class="input-field" style="width: 250px;">
+          <label class="input-label" style="font-size:0.8rem; font-weight:600; color:var(--color-cyan);">เลือกสถานการณ์เส้นทาง:</label>
+          <select id="meta-scenario-select" class="btn" style="width:100%; background: var(--bg-secondary); border-color: var(--border-color); padding: 0.5rem 0.75rem; font-size: 0.85rem; text-align: left; justify-content: space-between;">
+            <option value="parcel">📦 รถส่งพัสดุด่วน (Kerry/Flash Delivery)</option>
+            <option value="food">🛵 ไรเดอร์ส่งอาหาร (Food Delivery Rider)</option>
+            <option value="garbage">🗑️ รถเก็บขยะชุมชน (Garbage Collection)</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- Key Metrics -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--kpi-color: var(--color-cyan);">
+          <span class="kpi-label">โมเดลที่เลือกใช้งาน (Active Model)</span>
+          <div class="kpi-value" id="kpi-meta-model" style="font-size: 1.3rem;">Genetic Algorithm</div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-emerald);">
+          <span class="kpi-label">ระยะทางสั้นที่สุด (Best Distance)</span>
+          <div class="kpi-value" id="kpi-meta-distance">0.0<span class="kpi-unit">กม.</span></div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-amber);">
+          <span class="kpi-label">รอบการประมวลผล (Iteration)</span>
+          <div class="kpi-value" id="kpi-meta-iteration">0</div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-indigo);">
+          <span class="kpi-label">ความเร็วประมวลผล (Speed)</span>
+          <div class="kpi-value" id="kpi-meta-speed">0<span class="kpi-unit">ms/รอบ</span></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- 2D Delivery Map -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📍 แผนที่เมืองจำลองและการจัดเส้นทาง (Delivery Map Visualizer)</h2>
+          </div>
+          <canvas id="tsp-canvas" class="tsp-canvas" width="550" height="350"></canvas>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem; text-align: center;">
+            *จุดสีเหลือง = เมือง/ลูกค้า | จุดสีแดง = คลังสินค้า (Depot) | เส้นเรืองแสง = เส้นทางขนส่งที่ดีที่สุด ณ ปัจจุบัน
+          </div>
+        </div>
+
+        <!-- Metaheuristic Controls -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🎛️ เลือกและตั้งค่าอัลกอริทึม (Metaheuristic Controls)</h2>
+          </div>
+          
+          <!-- Tab selector -->
+          <div class="algo-tab-group">
+            <button class="algo-tab-btn active" data-algo="ga">🧬 Genetic (GA)</button>
+            <button class="algo-tab-btn" data-algo="aco">🐜 Ant Colony (ACO)</button>
+            <button class="algo-tab-btn" data-algo="sa">🌡️ Annealing (SA)</button>
+            <button class="algo-tab-btn" data-algo="pso">🐦 Particle Swarm (PSO)</button>
+          </div>
+
+          <div class="control-group">
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">จำนวนเมืองของลูกค้า (Number of Cities)</span>
+                <span class="input-value" id="cities-val">20 เมือง</span>
+              </div>
+              <input type="range" id="cities-input" min="10" max="40" step="1" value="20">
+            </div>
+
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">จำนวนรถขนส่ง (Number of Vehicles)</span>
+                <span class="input-value" id="vehicles-val">1 คัน</span>
+              </div>
+              <input type="range" id="vehicles-input" min="1" max="5" step="1" value="1">
+            </div>
+
+            <!-- Vehicle Capacity Constraint (CVRP) -->
+            <div class="input-field" style="border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <input type="checkbox" id="tsp-capacity-enable" style="width: 16px; height: 16px; cursor: pointer;">
+                <label for="tsp-capacity-enable" class="input-label" style="margin-bottom: 0; cursor: pointer; font-weight: bold; color: var(--color-cyan);">จำกัดความจุรถขนส่ง (Capacitated VRP)</label>
+              </div>
+              <div id="tsp-capacity-container" style="display: none; transition: all 0.3s ease;">
+                <div class="input-header">
+                  <span class="input-label">ความจุสัมภาระของรถต่อรอบ (Capacity)</span>
+                  <span class="input-value" id="tsp-capacity-val">5 ชิ้น</span>
+                </div>
+                <input type="range" id="tsp-capacity-input" min="3" max="10" step="1" value="5">
+              </div>
+            </div>
+
+            <!-- Dynamic Parameter Sliders (Controlled via JS depending on active tab) -->
+            <div id="dynamic-params-container">
+              <!-- Rendered dynamically via JS -->
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="btn-group">
+                <button class="btn btn-primary" id="btn-meta-start" style="flex: 1;"><span>▶️</span> เริ่มคำนวณ</button>
+                <button class="btn" id="btn-meta-pause"><span>⏸️</span> หยุด</button>
+                <button class="btn" id="btn-meta-reset"><span>🔄</span> รีเซ็ตโจทย์</button>
+              </div>
+              <button class="btn" id="btn-meta-generate">🎲 สุ่มเมืองใหม่</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Convergence Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📊 กราฟอัตราการลู่เข้าของคำตอบ (Convergence Curve)</h2>
+          </div>
+          <div class="chart-container">
+            <canvas id="meta-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Real-world Application Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">💡 การประยุกต์ใช้ในอุตสาหกรรมจริง (Real-World Use Case)</h2>
+          </div>
+          <div id="meta-explain-card" style="line-height: 1.6; font-size: 0.95rem; color: var(--text-secondary);">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Algorithm Leaderboard Card [NEW] -->
+        <div class="card full-width" style="margin-top: 0.5rem;">
+          <div class="card-header">
+            <h2 class="card-title">🏆 ตารางเปรียบเทียบประสิทธิภาพอัลกอริทึม (Algorithm Leaderboard)</h2>
+          </div>
+          <div class="table-responsive" style="overflow-x: auto;">
+            <table class="leaderboard-table" style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 0.5rem;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-size: 0.85rem;">
+                  <th style="padding: 0.75rem;">อัลกอริทึม (Algorithm)</th>
+                  <th style="padding: 0.75rem;">ระยะทางที่ดีที่สุด (Best Distance)</th>
+                  <th style="padding: 0.75rem;">จำนวนรอบที่ใช้ (Iterations)</th>
+                  <th style="padding: 0.75rem;">สถานะ (Status)</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem; text-align: right;">
+            *เปรียบเทียบประสิทธิภาพบนแผนที่เมืองเดียวกัน (ระบบจะรีเซ็ตตารางเมื่อสุ่มเมืองใหม่)*
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: ML & PINN SANDBOX [NEW] -->
+    <div id="ml-page" class="page-container">
+      <header>
+        <h1 class="pixel-art-title">ห้องปฏิบัติการปัญญาประดิษฐ์และ PINN</h1>
+        <p class="pixel-art-subtitle">เรียนรู้โมเดล Machine Learning แบบดั้งเดิม และโครงข่ายประสาทเทียมฟิสิกส์เชิงอนุมาน (Physics-Informed AI)</p>
+      </header>
+
+      <div class="dashboard-grid">
+        <!-- K-Means Clustering Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📊 1. K-Means Clustering (การจัดกลุ่มข้อมูล)</h2>
+          </div>
+          <canvas id="kmeans-canvas" class="ml-canvas" width="400" height="230"></canvas>
+          <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">จำนวนกลุ่มข้อมูล (K Clusters)</span>
+                <span class="input-value" id="k-val">3 กลุ่ม</span>
+              </div>
+              <input type="range" id="k-input" min="2" max="6" step="1" value="3">
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-primary" id="btn-kmeans-step" style="flex: 1;">🐾 รันทีละก้าว (Step)</button>
+              <button class="btn" id="btn-kmeans-run" style="flex: 1;">▶️ รันจบ</button>
+              <button class="btn" id="btn-kmeans-reset">🔄 รีเซ็ต</button>
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-secondary);">
+              *กากบาทสีเรืองแสงคือจุดกึ่งกลาง (Centroid) | สังเกตตัวกากบาทขยับหาจุดสมดุลของแต่ละกลุ่มข้อมูล
+            </div>
+          </div>
+        </div>
+
+        <!-- Linear Regression Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📈 2. Regression ด้วย Gradient Descent (การทอนความชัน)</h2>
+          </div>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+            <div style="flex: 1.5; min-width: 200px;">
+              <div class="canvas-title" style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.25rem;">
+                ขอบเขตข้อมูลและเส้นทำนาย (Data & Regression Line)
+              </div>
+              <canvas id="regression-canvas" class="ml-canvas" height="200" style="width:100%;"></canvas>
+            </div>
+            <div style="flex: 1; min-width: 130px;">
+              <div class="canvas-title" style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.25rem;">
+                การไต่เขาความชัน (Loss Landscape J(w))
+              </div>
+              <canvas id="regression-loss-canvas" class="ml-canvas" height="200" style="width:100%;"></canvas>
+            </div>
+          </div>
+          <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">อัตราการเรียนรู้ (Learning Rate - α)</span>
+                <span class="input-value" id="lr-val">0.05</span>
+              </div>
+              <input type="range" id="lr-input" min="0.01" max="1.5" step="0.01" value="0.05">
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-primary" id="btn-reg-train" style="flex: 1;">🧠 ฝึกฝนโมเดล (Train)</button>
+              <button class="btn" id="btn-reg-reset">🔄 รีเซ็ตเส้นทำนาย</button>
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); display: flex; justify-content: space-between;">
+              <span id="reg-loss-val">Loss: 0.0000</span>
+              <span id="reg-epoch-val">Epoch: 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Production & Capacity Planning Board -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📅 3. Weekly Production Planning (การวางแผนการผลิตและสต็อกรายสัปดาห์)</h2>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">
+              <strong>บทบาทของนักศึกษา:</strong> วางแผนยอดผลิตรายวัน (Mon - Fri) เพื่อตอบสนองความต้องการของลูกค้า โดยมีกำลังผลิตปกติสูงสุด 70 ชิ้น/วัน (ทำ OT ได้สูงสุด 90 ชิ้น/วัน) 
+              และต้องรักษาสมดุลคลังสินค้าไม่ให้ขาดมือเพื่อลดต้นทุนรวม
+            </div>
+            
+            <div class="table-responsive" style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center;" id="lp-table">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border-color); background: rgba(255,255,255,0.02);">
+                    <th style="padding: 0.5rem; text-align: left;">วัน (t)</th>
+                    <th style="padding: 0.5rem;">ความต้องการ (D_t)</th>
+                    <th style="padding: 0.5rem; width: 180px;">ยอดผลิต (P_t)</th>
+                    <th style="padding: 0.5rem;">กำลังผลิตที่ใช้</th>
+                    <th style="padding: 0.5rem;">สมการสมดุลคลังสินค้า (I_t = I_t-1 + P_t - D_t)</th>
+                    <th style="padding: 0.5rem;">สินค้าคงคลังปลายวัน (I_t)</th>
+                  </tr>
+                </thead>
+                <tbody id="lp-table-body">
+                  <!-- Generated via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+              <div style="font-size: 0.75rem; line-height: 1.5;">
+                <div><strong>สูตรคำนวณต้นทุนรวมสัปดาห์:</strong></div>
+                <div>ค่าเก็บสินค้า (Holding): 10 บาท/ชิ้น | ค่าล่วงเวลา (OT): 50 บาท/ชิ้น | ค่าปรับสินค้าขาด (Shortage): 100 บาท/ชิ้น</div>
+              </div>
+              <div style="text-align: right; font-family: var(--font-retro); font-size: 0.8rem;">
+                <div>ต้นทุนรวมสัปดาห์: <span id="lp-total-cost" style="color: var(--color-rose); font-weight: bold;">0</span> บาท</div>
+                <div id="lp-plan-status" style="font-size: 0.65rem; margin-top: 0.25rem;">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PINN vs DNN Damped Vibration Simulator (Full Width) -->
+        <div class="card full-width">
+          <div class="card-header">
+            <h2 class="card-title">🧠 3. Physics-Informed Neural Network (PINN) vs. Deep Neural Network (DNN)</h2>
+          </div>
+
+          <!-- PINN metrics -->
+          <div class="kpi-grid" style="margin-bottom: 1.25rem;">
+            <div class="kpi-card" style="--kpi-color: var(--color-rose);">
+              <span class="kpi-label">DNN Model Loss (เน้นข้อมูลอย่างเดียว)</span>
+              <div class="kpi-value" id="kpi-dnn-loss">0.0000</div>
+            </div>
+            <div class="kpi-card" style="--kpi-color: var(--color-indigo);">
+              <span class="kpi-label">PINN Data Loss (จับคู่จุดวัด)</span>
+              <div class="kpi-value" id="kpi-pinn-dataloss">0.0000</div>
+            </div>
+            <div class="kpi-card" style="--kpi-color: var(--color-cyan);">
+              <span class="kpi-label">PINN Physics Loss (ขัดแย้งสมการฟิสิกส์)</span>
+              <div class="kpi-value" id="kpi-pinn-phyloss">0.0000</div>
+            </div>
+            <div class="kpi-card" style="--kpi-color: var(--color-emerald);">
+              <span class="kpi-label">รอบฝึกฝนบอร์ด (Epoch)</span>
+              <div class="kpi-value" id="kpi-pinn-epoch">0</div>
+            </div>
+          </div>
+
+          <div class="pinn-comparison-grid">
+            <!-- Large graph plotting comparison -->
+            <div>
+              <div class="canvas-title">
+                <span>เปรียบเทียบการเรียนรู้คลื่นการสั่นสะเทือนแบบหน่วง (Damped Vibration Curve)</span>
+                <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-cyan);">Displacement (x) vs Time (t)</span>
+              </div>
+              <canvas id="pinn-canvas" class="pinn-canvas-large" height="300"></canvas>
+              
+              <div class="pinn-legend">
+                <div class="legend-item">
+                  <div class="legend-color" style="background: #10b981;"></div>
+                  <span>กราฟฟิสิกส์จริง (Ground Truth)</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background: #ef4444;"></div>
+                  <span>โมเดลแบบปกติ DNN (Data-Driven Only)</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background: #6366f1;"></div>
+                  <span>โมเดลฟิสิกส์ร่วม PINN (Physics-Informed)</span>
+                </div>
+                <div class="legend-item">
+                  <div style="width:8px; height:8px; border-radius:50%; background:#ffea00;"></div>
+                  <span>จุดข้อมูลวัดได้ที่มีจำกัด (Sparse Noisy Data)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parameters and visual representation -->
+            <div class="control-group" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); padding:1.25rem; border-radius:12px;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color:var(--color-cyan);">สภาวะฟิสิกส์ (Physical Settings)</h3>
+              
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">ความหน่วง (Damping - c)</span>
+                  <span class="input-value" id="pinn-c-val">0.30</span>
+                </div>
+                <input type="range" id="pinn-c-input" min="0.05" max="1.0" step="0.05" value="0.3">
+              </div>
+
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">ความแข็งสปริง (Spring - k)</span>
+                  <span class="input-value" id="pinn-k-val">4.00</span>
+                </div>
+                <input type="range" id="pinn-k-input" min="1.0" max="8.0" step="0.2" value="4.0">
+              </div>
+
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">จำนวนจุดวัดสัญญาณ (Training Points)</span>
+                  <span class="input-value" id="pinn-points-val">8 จุด</span>
+                </div>
+                <input type="range" id="pinn-points-input" min="5" max="15" step="1" value="8">
+              </div>
+
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">น้ำหนักสมการฟิสิกส์ (Physics Weight - λ)</span>
+                  <span class="input-value" id="pinn-weight-val">0.70</span>
+                </div>
+                <input type="range" id="pinn-weight-input" min="0.0" max="1.0" step="0.05" value="0.7">
+              </div>
+
+              <div class="btn-group" style="margin-top:0.5rem;">
+                <button class="btn btn-primary" id="btn-pinn-train" style="flex:1;">⚙️ Train AI Models</button>
+                <button class="btn" id="btn-pinn-resample">🎲 สุ่มข้อมูลใหม่</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-top:1.25rem; border-top:1px solid var(--border-color); padding-top:1rem;">
+            <strong>คำอธิบายผลลัพธ์การศึกษา:</strong> สังเกตกราฟเส้นสีแดง (DNN) เมื่อฝึกด้วยจุดข้อมูลจำนวนน้อย (สีเหลือง) มันจะพยายามบิดตัวเพื่อวิ่งเข้าหาจุดเหล่านั้นจนลืมกฎฟิสิกส์ ทำให้ได้คลื่นการสั่นสะเทือนที่บิดเบี้ยวในช่วงที่ไม่มีข้อมูล (Overfitting) แต่เส้นสีน้ำเงิน (PINN) จะสามารถวาดกราฟการแกว่งที่ลดลงอย่างสมบูรณ์แบบได้เหมือนเส้นจริง แม้จุดข้อมูลจะเหลือน้อยมากก็ตาม เนื่องจาก PINN มี **Physics Loss Term** ที่ปรับโทษความขัดแย้งทางฟิสิกส์จากสมการคลื่นความชันสองชั้น: $m \frac{d^2x}{dt^2} + c \frac{dx}{dt} + kx = 0$
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- PAGE 5: THEORY & GUIDE -->
+    <!-- Page 5: Smart Traffic Lab -->
+    <div id="traffic-page" class="page-container">
+      <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <h1 id="traffic-page-title" class="pixel-art-title">ห้องปฏิบัติการไฟจราจรอัจฉริยะ (Smart Traffic Lab)</h1>
+          <p class="pixel-art-subtitle" id="traffic-page-subtitle">แฝดดิจิทัลระบบสี่แยกอัจฉริยะเพื่อวิเคราะห์คิวและแก้ไขปัญหารถติดสะสม (Year 1 Sandbox)</p>
+        </div>
+      </header>
+
+      <!-- Key Metrics -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--kpi-color: var(--color-cyan);">
+          <span class="kpi-label">ตรรกะควบคุมไฟแดง (Control Logic)</span>
+          <div class="kpi-value" id="kpi-traffic-logic" style="font-size: 1.2rem;">⏱️ Fixed Time</div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-rose);">
+          <span class="kpi-label">เวลารอเฉลี่ยสะสม (Avg Wait Time)</span>
+          <div class="kpi-value" id="kpi-traffic-wait">0.0<span class="kpi-unit">วินาที</span></div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-amber);">
+          <span class="kpi-label">คิวรถสะสมสูงสุด (Max Queue)</span>
+          <div class="kpi-value" id="kpi-traffic-max-queue">0<span class="kpi-unit">คัน</span></div>
+        </div>
+        <div class="kpi-card" style="--kpi-color: var(--color-emerald);">
+          <span class="kpi-label">จำนวนรถผ่านแยก (Throughput)</span>
+          <div class="kpi-value" id="kpi-traffic-throughput">0<span class="kpi-unit">คัน</span></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Interactive Intersection Canvas -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📍 แบบจำลองทางแยกเรียลไทม์ (Interactive 4-Way Intersection)</h2>
+          </div>
+          <canvas id="traffic-canvas" class="tsp-canvas" width="550" height="350"></canvas>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem; text-align: center;">
+            *จุดวงกลมพิกเซลคือสัญญาณไฟ | เส้นประสีชมพูคือเซนเซอร์ใต้ถนนตรวจจับรถเพื่อแสดงหลักการของไฟจราจรอัจฉริยะ
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🎛️ ตั้งค่าอัลกอริทึมทางแยก (Traffic Control Settings)</h2>
+          </div>
+          
+          <!-- Tab selector for Logic -->
+          <div class="algo-tab-group" id="traffic-logic-tabs">
+            <button class="algo-tab-btn active" data-logic="fixed">⏱️ Fixed Time</button>
+            <button class="algo-tab-btn" data-logic="smart">🔌 Smart Sensors</button>
+            <button class="algo-tab-btn" data-logic="ai">🧠 AI Queue</button>
+          </div>
+
+          <div class="control-group">
+            <div class="input-field">
+              <div class="input-header">
+                <span class="input-label">ความหนาแน่นของจราจร (Traffic Density)</span>
+                <span class="input-value" id="traffic-density-val">50%</span>
+              </div>
+              <input type="range" id="traffic-density-input" min="10" max="100" step="10" value="50">
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="btn-group">
+                <button class="btn btn-primary" id="btn-traffic-start" style="flex: 1;"><span>▶️</span> เริ่มจำลอง</button>
+                <button class="btn" id="btn-traffic-reset"><span>🔄</span> รีเซ็ตคิว</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explanation card -->
+        <div class="card full-width">
+          <div class="card-header">
+            <h2 class="card-title">💡 คำอธิบายตรรกะควบคุมและสิ่งเรียนรู้สำหรับปี 1 (Learning Objectives)</h2>
+          </div>
+          <div id="traffic-explain-card" style="line-height: 1.6; font-size: 0.95rem; color: var(--text-secondary);">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 6: Catapult & DOE Lab -->
+    <div id="catapult-page" class="page-container">
+      <header>
+        <h1 class="pixel-art-title">ห้องปฏิบัติการเครื่องยิงและ DOE (Catapult & DOE Lab)</h1>
+        <p class="pixel-art-subtitle">วิเคราะห์ปัจจัยที่มีผลต่อระยะทางการยิงลูกบอลและหาค่าการตั้งค่าที่ดีที่สุดผ่านตารางออกแบบการทดลอง</p>
+      </header>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; align-items: start;">
+        <!-- Interactive Catapult Simulator Card -->
+        <div class="card" style="margin-top: 0;">
+          <div class="card-header">
+            <h2 class="card-title">🚀 เครื่องจำลองการยิงลูกบอล (Catapult Simulator)</h2>
+          </div>
+          
+          <!-- Interactive Catapult Canvas -->
+          <div style="text-align: center; margin-bottom: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 0.5rem; border: 1px solid var(--border-color);">
+            <canvas id="catapult-canvas" width="550" height="300" style="max-width: 100%; border-radius: 4px; display: block; margin: 0 auto;"></canvas>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div class="grid-2-col" style="gap: 1rem;">
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">องศาการปล่อยยิง (Release Angle)</span>
+                  <span class="input-value" id="catapult-release-val">45°</span>
+                </div>
+                <input type="range" id="catapult-release-input" min="20" max="80" step="1" value="45">
+              </div>
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">องศาการง้าง (Pullback Angle)</span>
+                  <span class="input-value" id="catapult-pullback-val">90°</span>
+                </div>
+                <input type="range" id="catapult-pullback-input" min="45" max="135" step="1" value="90">
+              </div>
+            </div>
+            
+            <div class="grid-2-col" style="gap: 1rem; margin-top: 0.75rem;">
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">องศาการหยุด (Stop Angle)</span>
+                  <span class="input-value" id="catapult-stop-val">60°</span>
+                </div>
+                <input type="range" id="catapult-stop-input" min="30" max="90" step="1" value="60">
+              </div>
+              <div class="input-field">
+                <div class="input-header">
+                  <span class="input-label">องศาของถ้วย (Cup Angle)</span>
+                  <span class="input-value" id="catapult-cup-val">0°</span>
+                </div>
+                <input type="range" id="catapult-cup-input" min="-30" max="30" step="1" value="0">
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem;">
+              <button class="btn btn-primary" id="btn-catapult-fire" style="flex: 2;">🔥 ยิงลูกบอล (Launch!)</button>
+              <button class="btn" id="btn-catapult-reset" style="flex: 1;">🔄 รีเซ็ต</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Distance Solver Card -->
+        <div class="card" style="margin-top: 0;">
+          <div class="card-header">
+            <h2 class="card-title">🎯 เครื่องมือค้นหาการตั้งค่าระยะเป้าหมาย (Target Solver)</h2>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            กำหนดระยะทางที่ต้องการยิง และให้ระบบประมวลผลคำนวณหามุมและองศาการตั้งค่าเครื่องยิงที่ดีที่สุด เพื่อให้ยิงได้ตรงเป้าหมาย
+          </p>
+          <div class="input-field">
+            <div class="input-header">
+              <span class="input-label">ระยะเป้าหมายที่ต้องการ (Target Distance)</span>
+              <span class="input-value" id="catapult-target-val">25.0 ม.</span>
+            </div>
+            <input type="range" id="catapult-target-input" min="5" max="45" step="0.5" value="25">
+          </div>
+          <button class="btn btn-primary" id="btn-catapult-solve" style="width: 100%; margin-top: 1rem;">🔍 คำนวณการตั้งค่าที่เหมาะสมที่สุด</button>
+          
+          <div id="catapult-solve-results" style="margin-top: 1.25rem; display: none; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <strong style="color: var(--text-primary); font-size: 0.9rem; display: block; margin-bottom: 0.75rem;">ผลการคำนวณการตั้งค่าที่ดีที่สุด:</strong>
+            <div style="font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary);">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding: 0.25rem 0;">
+                <span>องศาการยิง (A):</span>
+                <strong style="color: var(--text-primary);" id="solve-result-a">-</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding: 0.25rem 0;">
+                <span>องศาการง้าง (B):</span>
+                <strong style="color: var(--text-primary);" id="solve-result-b">-</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding: 0.25rem 0;">
+                <span>องศาการหยุด (C):</span>
+                <strong style="color: var(--text-primary);" id="solve-result-c">-</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding: 0.25rem 0;">
+                <span>องศาของถ้วย (D):</span>
+                <strong style="color: var(--text-primary);" id="solve-result-d">-</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 0.25rem 0; font-weight: bold; color: var(--color-cyan);">
+                <span>ระยะทางยิงที่ได้:</span>
+                <span id="solve-result-dist">-</span>
+              </div>
+            </div>
+            <button class="btn" id="btn-catapult-apply-solve" style="width: 100%; margin-top: 0.75rem;">📥 นำค่าการตั้งค่านี้ไปใช้งาน</button>
+          </div>
+        </div>
+
+        <!-- DOE Setup & Main Effects Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📊 ผลวิเคราะห์อิทธิพลของปัจจัย (Main Effects Analysis)</h2>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            แสดงระยะทางเฉลี่ยที่เปลี่ยนแปลงไปเมื่อปรับปัจจัยจาก ระดับต่ำ (-) ไปหาระดับสูง (+) เพื่อศึกษาว่าปัจจัยใดส่งผลต่อระยะการยิงมากที่สุด
+          </p>
+          <div id="doe-effects-chart" style="display: flex; flex-direction: column; gap: 0.75rem; padding: 0.5rem 0;">
+            <!-- Rendered dynamically via JS using CSS styled progress bars -->
+            <div class="effect-bar-container" style="text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+              <span>ไม่มีข้อมูลผลการทดสอบ DOE (กรุณารันการทดลองในตารางด้านล่างให้ครบถ้วน)</span>
+            </div>
+          </div>
+          <div style="margin-top: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+            <strong style="color: var(--text-primary); font-size: 0.9rem;">เกณฑ์ระดับในการทดลอง (DOE Levels):</strong>
+            <table style="width: 100%; font-size: 0.8rem; margin-top: 0.5rem; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                  <th style="padding: 0.25rem;">ปัจจัย (Factors)</th>
+                  <th style="padding: 0.25rem; text-align: center; width: 75px;">ระดับต่ำ (-)</th>
+                  <th style="padding: 0.25rem; text-align: center; width: 75px;">ระดับสูง (+)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px dashed var(--border-color); height: 35px;">
+                  <td style="padding: 0.25rem; font-weight: bold;">A: องศาการยิง (Release)</td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-a-low" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="35" min="20" max="80">
+                  </td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-a-high" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="55" min="20" max="80">
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px dashed var(--border-color); height: 35px;">
+                  <td style="padding: 0.25rem; font-weight: bold;">B: องศาการง้าง (Pullback)</td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-b-low" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="70" min="45" max="135">
+                  </td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-b-high" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="110" min="45" max="135">
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px dashed var(--border-color); height: 35px;">
+                  <td style="padding: 0.25rem; font-weight: bold;">C: องศาการหยุด (Stop)</td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-c-low" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="45" min="30" max="90">
+                  </td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-c-high" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="75" min="30" max="90">
+                  </td>
+                </tr>
+                <tr style="height: 35px;">
+                  <td style="padding: 0.25rem; font-weight: bold;">D: องศาของถ้วย (Cup)</td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-d-low" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="-10" min="-30" max="30">
+                  </td>
+                  <td style="padding: 0.25rem; text-align: center;">
+                    <input type="number" id="doe-level-d-high" style="width: 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; text-align: center; font-size: 0.85rem;" value="10" min="-30" max="30">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOE Table Card (Full Width) -->
+      <div class="card full-width" style="margin-top: 1.5rem;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <h2 class="card-title">📋 ตารางออกแบบการทดลอง 2<sup>4-1</sup> Fractional Factorial Design (D = A × B × C)</h2>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-primary" id="btn-doe-run-all" style="padding: 0.5rem 1rem; font-size: 0.85rem;">🚀 รันการทดลองทั้งหมด (Run All)</button>
+            <button class="btn" id="btn-doe-clear" style="padding: 0.5rem 1rem; font-size: 0.85rem;">🧹 ล้างตาราง</button>
+          </div>
+        </div>
+        <div class="table-wrapper" style="overflow-x: auto; margin-top: 1rem;">
+          <table class="lean-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+            <thead>
+              <tr style="background: rgba(255, 255, 255, 0.02); border-bottom: 2px solid var(--border-color); height: 40px;">
+                <th style="padding: 0.5rem; text-align: center; width: 60px;">Run</th>
+                <th style="padding: 0.5rem; text-align: center;">A (Release Angle)</th>
+                <th style="padding: 0.5rem; text-align: center;">B (Pullback Angle)</th>
+                <th style="padding: 0.5rem; text-align: center;">C (Stop Angle)</th>
+                <th style="padding: 0.5rem; text-align: center;">D (Cup Angle)</th>
+                <th style="padding: 0.5rem; text-align: center; width: 180px;">ผลลัพธ์ระยะทางยิง (Distance)</th>
+                <th style="padding: 0.5rem; text-align: center; width: 120px;">ดำเนินการ</th>
+              </tr>
+            </thead>
+            <tbody id="doe-table-body">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="theory-page" class="page-container">
+      <header>
+        <h1 class="pixel-art-title">บทเรียนและทฤษฎี (Theory & Guide)</h1>
+        <p class="pixel-art-subtitle">ความรู้ประกอบแบบจำลองเพื่อการเรียนรู้การทำ Lean Manufacturing, AIoT, Metaheuristic และ Machine Learning</p>
+      </header>
+      
+      <div class="theory-grid">
+        <!-- Lean Theory -->
+        <div class="card theory-card">
+          <h3>1. การปรับสมดุลสายการผลิต (Lean Line Balancing)</h3>
+          <p>
+            การปรับสมดุลสายการผลิตเป็นหัวใจสำคัญของการลดความสูญเสียในระบบ Lean Manufacturing 
+            โดยมีวัตถุประสงค์เพื่อจัดสรรงานและกำลังคนให้เหมาะสมที่สุด เพื่อให้ชิ้นงานไหลได้อย่างต่อเนื่องโดยไม่เกิดคอขวด 
+            และลดปริมาณงานระหว่างทำ (WIP) ในระบบ
+          </p>
+          
+          <div class="formula-box">
+            Takt Time = เวลาเปิดทำงานสุทธิ / ปริมาณความต้องการของลูกค้า
+          </div>
+          <p>
+            <strong>Takt Time</strong> คือ "อัตราความเร็ว" ที่ลูกค้าต้องการให้สายการผลิตทำ ซึ่งเป็นตัวกำหนดจังหวะการผลิต 
+            ถ้าสถานีใดสถานีหนึ่งทำงานช้ากว่า Takt Time สถานีนั้นจะเป็น **คอขวด (Bottleneck)** 
+            ซึ่งส่งผลให้เกิดการสะสมของงานระหว่างทำ (WIP) หน้าสถานีนั้น และทำให้อัตราผลผลิตสุดท้ายต่ำกว่าเป้าหมายของลูกค้า
+          </p>
+          
+          <div class="formula-box">
+            Line Efficiency (%) = [ผลรวม Effective CT / (จำนวนสถานี × เวลาคอขวด)] × 100
+          </div>
+          <p>
+            <strong>วิธีแก้ปัญหาคอขวดในระบบ Lean:</strong>
+            <ul>
+              <li><strong>จัดสรรจำนวนคนใหม่ (Reallocate Operators):</strong> เพิ่มผู้ปฏิบัติงานในสถานีคอขวดเพื่อช่วยแบ่งเบาภาระและลดเวลางานจริงลงครึ่งหนึ่ง</li>
+              <li><strong>รวมสถานีงาน (Task Combining):</strong> รวมสถานีที่ทำงานเร็วและมีเวลาว่างเยอะเข้าด้วยกันเพื่อลดจำนวนกำลังคนและเพิ่มความสมดุล</li>
+              <li><strong>ปรับปรุงเวลาทำงาน (Process Improvement):</strong> เช่น การนำเครื่องจักร/ระบบอัตโนมัติมาช่วยเพื่อย่นเวลาพื้นฐานลง</li>
+            </ul>
+          </p>
+        </div>
+        
+        <!-- AIoT Theory -->
+        <div class="card theory-card">
+          <h3>2. ระบบแฝดดิจิทัลและการบำรุงรักษาเชิงคาดการณ์ (AIoT Predictive Maintenance)</h3>
+          <p>
+            ระบบการบำรุงรักษาเชิงคาดการณ์ (Predictive Maintenance) คือการคาดการณ์และป้องกันความเสียหายของเครื่องจักรล่วงหน้า 
+            โดยอาศัยเทคโนโลยี **AIoT (Artificial Intelligence of Things)** ในการเก็บข้อมูลตัวชี้วัด เช่น การสั่นสะเทือน และอุณหภูมิ 
+            แล้วใช้ปัญญาประดิษฐ์ประเมินความสมบูรณ์และวินิจฉัยจุดบกพร่องของอุปกรณ์
+          </p>
+          
+          <p>
+            <strong>เกณฑ์มาตรฐานความสั่นสะเทือน ISO 10816:</strong><br>
+            ใช้สำหรับประเมินความสั่นสะเทือนรวม (Vibration Velocity RMS) ของเครื่องจักรหมุนทั่วไป:
+            <table class="iso-table">
+              <thead>
+                <tr>
+                  <th>ความสั่นสะเทือน (mm/s RMS)</th>
+                  <th>ระดับสถานะของเครื่องจักร</th>
+                  <th>การประเมินผล</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>0.1 - 1.8</td>
+                  <td><span class="iso-zone iso-zone-a">Zone A</span> ดีมาก (Good)</td>
+                  <td>พร้อมใช้งานปกติ</td>
+                </tr>
+                <tr>
+                  <td>1.8 - 4.5</td>
+                  <td><span class="iso-zone iso-zone-b">Zone B</span> ยอมรับได้ (Satisfactory)</td>
+                  <td>ใช้งานได้ปกติแต่ควรจับตามอง</td>
+                </tr>
+                <tr>
+                  <td>4.5 - 7.1</td>
+                  <td><span class="iso-zone iso-zone-c">Zone C</span> เริ่มผิดปกติ (Unsatisfactory)</td>
+                  <td>ควรวางแผนซ่อมบำรุงล่วงหน้า</td>
+                </tr>
+                <tr>
+                  <td>มากกว่า 7.1</td>
+                  <td><span class="iso-zone iso-zone-d">Zone D</span> อันตราย (Unacceptable)</td>
+                  <td>ต้องหยุดเครื่องจักรทันทีเพื่อซ่อมแซม</td>
+                </tr>
+              </tbody>
+            </table>
+          </p>
+          
+          <p>
+            <strong>การใช้ FFT ในการระบุประเภทความเสียหาย:</strong><br>
+            เมื่อเซนเซอร์วัดการสั่นสะเทือนได้เป็นคลื่นเวลาดิบ (Time-domain) คอมพิวเตอร์หรือ IoT Edge จะแปลงสัญญาณเป็นโดเมนความถี่ (Frequency-domain) 
+            ด้วยวิธี **FFT (Fast Fourier Transform)** ทำให้เราเห็นยอดความถี่ (Peak) ของการสั่นได้อย่างชัดเจน:
+            <ul>
+              <li><strong>Unbalance:</strong> จะเกิดแรงเหวี่ยงที่ความถี่หมุนรอบ <strong>1X RPM</strong> เด่นชัดมากที่สุด</li>
+              <li><strong>Misalignment:</strong> จะเกิดความเค้นที่ขั้วเชื่อมต่อ ทำให้ความถี่โดดเด่นทั้งในระดับ <strong>1X RPM และ 2X RPM</strong></li>
+              <li><strong>Bearing Fault:</strong> เม็ดลูกปืนจะสั่นกระแทกเกิดเป็นความถี่สูงพิเศษในช่วงความถี่เฉพาะของตลับลูกปืน</li>
+            </ul>
+          </p>
+        </div>
+
+        <!-- Metaheuristic Theory [NEW] -->
+        <div class="card theory-card">
+          <h3>3. อัลกอริทึมเมต้าฮิวริสติก (Metaheuristic Optimization)</h3>
+          <p>
+            เมต้าฮิวริสติกคือแนวทางการค้นหาคำตอบที่ดีที่สุดในพื้นที่การค้นหาขนาดใหญ่ (Search Space) 
+            ซึ่งคอมพิวเตอร์ทั่วไปไม่สามารถหาคำตอบที่แน่นอนได้ในเวลาอันรวดเร็ว เหมาะสำหรับการแก้โจทย์ยากๆ อย่าง Traveling Salesperson Problem (TSP)
+          </p>
+          <p>
+            <strong>รายละเอียดโมเดลที่นำมาศึกษา:</strong>
+            <ul>
+              <li><strong>Genetic Algorithm (GA):</strong> เลียนแบบธรรมชาติผ่านการคัดเลือกสายพันธุ์ คล้ายการตัดแต่งยีน (Crossover) และผ่าเหล่า (Mutation) เพื่อกรองคำตอบที่ดีที่สุดขึ้นมา</li>
+              <li><strong>Ant Colony Optimization (ACO):</strong> เลียนแบบพฤติกรรมมดเดินหาอาหาร เส้นทางที่มดเดินผ่านบ่อยจะมีความเข้มของสารเคมี (ฟีโรโมน) เข้มข้นขึ้น มดตัวต่อไปจะเลือกเดินทางนั้นมากขึ้น</li>
+              <li><strong>Simulated Annealing (SA):</strong> เลียนแบบการอบเหนียวเหล็ก ช่วงอุณหภูมิสูงจะยอมรับคำตอบที่แย่ลงเพื่อหลุดจาก "หลุมคำตอบเฉพาะจุด (Local Optima)" และจะเริ่มประณีตขึ้นเมื่ออุณหภูมิลดลง</li>
+              <li><strong>Particle Swarm Optimization (PSO):</strong> เลียนแบบพฤติกรรมการเคลื่อนที่ของฝูงนกหรือปลา จุดอนุภาคแต่ละตัวจะพุ่งหาเป้าหมายโดยอิงจากจุดที่ดีที่สุดส่วนตัว (Personal Best) และของทั้งกลุ่ม (Global Best)</li>
+            </ul>
+          </p>
+        </div>
+
+        <!-- ML & PINN Theory [NEW] -->
+        <div class="card theory-card">
+          <h3>4. ปัญญาประดิษฐ์ที่รู้กฎฟิสิกส์ (Physics-Informed Neural Networks)</h3>
+          <p>
+            ในทางวิศวกรรมศาสตร์ ข้อมูลที่วัดได้จากการสั่นสะเทือนมักมีปริมาณน้อย มีสัญญาณรบกวน (Noise) และราคาแพง 
+            โมเดล Machine Learning ปกติ เช่น Deep Neural Networks (DNN) จะไม่เข้าใจกฎธรรมชาติ ทำให้พยากรณ์ผลลัพธ์ที่ฝ่าฝืนกฎฟิสิกส์ออกไป เช่น เกิดการสั่นสะเทือนที่รุนแรงขึ้นเรื่อยๆ โดยไม่มีที่มา (Energy Conservation Violation)
+          </p>
+          <p>
+            <strong>หลักการทำงานของ PINNs:</strong><br>
+            PINN แตกต่างจาก DNN ตรงที่กระบวนการฝึกสอนจะไม่ได้ใช้วัดระยะห่างจากจุดข้อมูลจริง (Data Loss) เท่านั้น 
+            แต่จะทำการตรวจสอบความขัดแย้งของคำทำนายผ่านสมการอนุพันธ์ย่อย (Partial Differential Equations - PDEs) 
+            และนำมาคิดเป็นแต้มลบ (Physics Loss) ในสมการต้นทุน:
+          </p>
+          <div class="formula-box">
+            Loss_Total = Loss_Data + λ · Loss_Physics
+          </div>
+          <p>
+            ในแบบจำลองนี้ ฟิสิกส์การสั่นสะเทือนของบอร์ดโครงสร้างมอเตอร์ถูกอ้างอิงด้วยสมการการแกว่งแบบฮาร์มอนิกอย่างง่ายที่มีตัวหน่วง (Damped Harmonic Oscillator):
+          </p>
+          <div class="formula-box">
+            m · d²x/dt² + c · dx/dt + k · x = 0
+          </div>
+          <p>
+            *เมื่อ $\lambda > 0$ โมเดลจะถูกบังคับให้เรียนรู้เฉพาะผลเฉลยของสมการนี้เท่านั้น ทำให้สามารถทำนายคลื่นการสั่นได้อย่างถูกต้องแม้มีจุดข้อมูลในการสอนไม่กี่จุด
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
